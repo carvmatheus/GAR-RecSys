@@ -114,7 +114,7 @@ class GAR(object):
         # get transformed embeddings
         self.user_ori_emb = tf.placeholder(tf.float32, [None, emb_dim], name='ori_user_emb')
         self.item_ori_emb = tf.placeholder(tf.float32, [None, emb_dim], name='ori_item_emb')
-        with tf.variable_scope("D", reuse=True):
+        with tf.variable_scope("D", reuse=tf.AUTO_REUSE):
             self.warm_user_emb = build_mlp(self.user_ori_emb, self.d_layer, self.d_act, self.d_drop,
                                            False, 'user_emb', bn_first=True)
             self.warm_item_emb = build_mlp(self.item_ori_emb, self.d_layer, self.d_act, self.d_drop,
