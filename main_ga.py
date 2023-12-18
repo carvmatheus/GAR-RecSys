@@ -222,48 +222,47 @@ def main(a,b):
                             )
     
 
-    # timer.logging(
-    #     'Cold-start recommendation result@{}: PRE, REC, NDCG: {:.4f}, {:.4f}, {:.4f}'.format(
-    #         args.Ks[0], cold_res['precision'][0], cold_res['recall'][0], cold_res['ndcg'][0]))
+    timer.logging(
+        'Cold-start recommendation result@{}: PRE, REC, NDCG: {:.4f}, {:.4f}, {:.4f}'.format(
+            args.Ks[0], cold_res['precision'][0], cold_res['recall'][0], cold_res['ndcg'][0]))
 
-    # # warm recommendation
-    # warm_res, warm_dist = ndcg.test(model.get_ranked_rating,
-    #                                 lambda u: model.get_user_rating(u, item_index, gen_user_emb, gen_item_emb),
-    #                                 ts_nei=para_dict['warm_test_user_nb'],
-    #                                 ts_user=para_dict['warm_test_user'][:args.n_test_user],
-    #                                 masked_items=para_dict['cold_item'],
-    #                                 exclude_pair_cnt=exclude_test_warm,
-    #                                 )
-    # timer.logging("Warm recommendation result@{}: PRE, REC, NDCG: {:.4f}, {:.4f}, {:.4f}".format(
-    #     args.Ks[0], warm_res['precision'][0], warm_res['recall'][0], warm_res['ndcg'][0]))
+    # warm recommendation
+    warm_res, warm_dist = ndcg.test(model.get_ranked_rating,
+                                    lambda u: model.get_user_rating(u, item_index, gen_user_emb, gen_item_emb),
+                                    ts_nei=para_dict['warm_test_user_nb'],
+                                    ts_user=para_dict['warm_test_user'][:args.n_test_user],
+                                    masked_items=para_dict['cold_item'],
+                                    exclude_pair_cnt=exclude_test_warm,
+                                    )
+    timer.logging("Warm recommendation result@{}: PRE, REC, NDCG: {:.4f}, {:.4f}, {:.4f}".format(
+        args.Ks[0], warm_res['precision'][0], warm_res['recall'][0], warm_res['ndcg'][0]))
 
-    # # hybrid recommendation
-    # hybrid_res, _ = ndcg.test(model.get_ranked_rating,
-    #                         lambda u: model.get_user_rating(u, item_index, gen_user_emb, gen_item_emb),
-    #                         ts_nei=para_dict['hybrid_test_user_nb'],
-    #                         ts_user=para_dict['hybrid_test_user'][:args.n_test_user],
-    #                         masked_items=None,
-    #                         exclude_pair_cnt=exclude_test_hybrid,
-    #                         )
-    # timer.logging("Hybrid recommendation result@{}: PRE, REC, NDCG: {:.4f}, {:.4f}, {:.4f}".format(
-    #     args.Ks[0], hybrid_res['precision'][0], hybrid_res['recall'][0], hybrid_res['ndcg'][0]))
+    # hybrid recommendation
+    hybrid_res, _ = ndcg.test(model.get_ranked_rating,
+                            lambda u: model.get_user_rating(u, item_index, gen_user_emb, gen_item_emb),
+                            ts_nei=para_dict['hybrid_test_user_nb'],
+                            ts_user=para_dict['hybrid_test_user'][:args.n_test_user],
+                            masked_items=None,
+                            exclude_pair_cnt=exclude_test_hybrid,
+                            )
+    timer.logging("Hybrid recommendation result@{}: PRE, REC, NDCG: {:.4f}, {:.4f}, {:.4f}".format(
+        args.Ks[0], hybrid_res['precision'][0], hybrid_res['recall'][0], hybrid_res['ndcg'][0]))
 
     # 保存测试结果
     sess.close()  # 关闭 session
-    # result_file = './GAR/result/'
-    # if not os.path.exists(result_file):
-    #     os.makedirs(result_file)
-    # with open(result_file + f'{args.model}.txt', 'a') as f:
-    #     f.write(str(vars(args)))
-    #     f.write(' | ')
-    #     for i in range(len(args.Ks)):
-    #         f.write('%.4f %.4f %.4f ' % (cold_res['precision'][i], cold_res['recall'][i], cold_res['ndcg'][i]))
-    #     f.write(' | ')
-    #     for i in range(len(args.Ks)):
-    #         f.write('%.4f %.4f %.4f ' % (warm_res['precision'][i], warm_res['recall'][i], warm_res['ndcg'][i]))
-    #     f.write(' | ')
-    #     for i in range(len(args.Ks)):
-    #         f.write('%.4f %.4f %.4f ' % (hybrid_res['precision'][i], hybrid_res['recall'][i], hybrid_res['ndcg'][i]))
-    #     f.write('\n')
+    result_file = './GAR/result/'
+    if not os.path.exists(result_file):
+        os.makedirs(result_file)
+    with open(result_file + f'{args.model}.txt', 'a') as f:
+        f.write(' | ')
+        for i in range(len(args.Ks)):
+            f.write('%.4f %.4f %.4f ' % (cold_res['precision'][i], cold_res['recall'][i], cold_res['ndcg'][i]))
+        f.write(' | ')
+        for i in range(len(args.Ks)):
+            f.write('%.4f %.4f %.4f ' % (warm_res['precision'][i], warm_res['recall'][i], warm_res['ndcg'][i]))
+        f.write(' | ')
+        for i in range(len(args.Ks)):
+            f.write('%.4f %.4f %.4f ' % (hybrid_res['precision'][i], hybrid_res['recall'][i], hybrid_res['ndcg'][i]))
+        f.write('\n')
 
     return cold_res['precision'][0]

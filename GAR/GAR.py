@@ -3,7 +3,7 @@ import tensorflow as tf
 
 
 def build_mlp(mlp_in, hidden_dims, act, drop_rate, is_training, scope_name, bn_first=True):
-    with tf.variable_scope(scope_name):
+    with tf.variable_scope(scope_name, reuse=tf.AUTO_REUSE):
         hidden = mlp_in
         if bn_first:
             hidden = tf.layers.batch_normalization(hidden,
